@@ -11,7 +11,7 @@ from settings import OTP_KEY
 totp = pyotp.TOTP(OTP_KEY)
 
 
-def otp():
+def otp() -> discord.Embed:
     otp = totp.now()
     now = datetime.now().timestamp()
     return discord.Embed(

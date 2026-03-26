@@ -19,6 +19,12 @@ DEV_ID = [int(dev_id.strip()) for dev_id in os.getenv("DEV_ID").split(",")]
 
 OTP_KEY = os.getenv("OTP_KEY")
 
+if OTP_KEY is None:
+    print("錯誤: 找不到 OTP_KEY 環境變數")
+    print("請確認 .env 檔案中已正確設置 OTP_KEY")
+    print('格式應為: OTP_KEY = "你的OTP密鑰"')
+    sys.exit(1)
+
 # 檢查 Token 是否存在
 if DISCORD_BOT_TOKEN is None:
     print("錯誤: 找不到 DISCORD_BOT_TOKEN 環境變數")
