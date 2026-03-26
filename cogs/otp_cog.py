@@ -11,6 +11,16 @@ from settings import OTP_KEY
 totp = pyotp.TOTP(OTP_KEY)
 
 
+def otp():
+    otp = totp.now()
+    now = datetime.now().timestamp()
+    return discord.Embed(
+        title="Google 帳號 OTP",
+        description=f"你的 OTP 是：```{otp}```\n將在 <t:{int(now // totp.interval + 1) * totp.interval}:R> 過期",
+        color=discord.Color.blue(),
+    )
+
+
 class RefreshingBtn(discord.ui.Button):
     def __init__(self):
         super().__init__(
@@ -21,14 +31,7 @@ class RefreshingBtn(discord.ui.Button):
         )
 
     async def callback(self, interaction: discord.Interaction):
-        otp = totp.now()
-        now = datetime.now().timestamp()
-        embed = discord.Embed(
-            title="Google 帳號 OTP",
-            description=f"你的 OTP 是：```{otp}```\n此密碼將在 <t:{int(now // totp.interval + 1) * totp.interval}:R> 過期",
-            color=discord.Color.blue(),
-        )
-        await interaction.response.edit_message(embed=embed)
+        await interaction.response.edit_message(embed=otp(), view=view)
 
 
 refreshing_btn = RefreshingBtn()
@@ -44,14 +47,7 @@ class OTPCog(commands.Cog):
         name="otp", description="生成用於 Google 帳號登入的一次性密碼"
     )
     async def otp(self, interaction: discord.Interaction):
-        otp = totp.now()
-        now = datetime.now().timestamp()
-        embed = discord.Embed(
-            title="Google 帳號 OTP",
-            description=f"你的 OTP 是：```{otp}```\n此密碼將在 <t:{int(now // totp.interval + 1) * totp.interval}:R> 過期",
-            color=discord.Color.blue(),
-        )
-        await interaction.response.send_message(embed=embed, view=view)
+        await interaction.response.send_message(embed=otp(), view=view)
 
 
 async def setup(bot: commands.Bot):
